@@ -1,0 +1,93 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${DBHOST:localhost}:${DBPORT:5432}/${DBNAME}
+    username: ${DBUSER}
+    password: ${DBPASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: HikariPool-Prod
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      connection-test-query: SELECT 1
+  data:
+    redis:
+      host: ${REDIS_HOST:redis}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc.time_zone: UTC
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: false
+    locations: classpath:db/migration
+    validate-on-migrate: true
+    out-of-order: false
+
+  docker:
+    compose:
+      enabled: false     # Never auto-manage Docker in prod
+
+server:
+  port: ${SERVER_PORT:8080}
+  forward-headers-strategy: framework
+
+logging:
+  level:
+    root: WARN
+    com.company.usermanagement: INFO
+  pattern:
+    console: "%d{ISO8601} %-5level [rid=%X{requestId:-na}] [%thread] %logger - %msg%n"
+
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+    key-id: ${JWT_KID:current}
+    previous-secret: ${JWT_PREVIOUS_SECRET:}
+    previous-key-id: ${JWT_PREVIOUS_KID:previous}
+    expiration-ms: ${JWT_EXPIRATION_MS:900000}
+    refresh-expiration-ms: ${JWT_REFRESH_MS:604800000}
+  cors:
+    allowed-origins: ${ALLOWED_ORIGINS}
+  rate-limit:
+    backend: ${RATE_LIMIT_BACKEND:redis}
+    capacity: ${RATE_LIMIT_CAPACITY:100}
+    refill-tokens: ${RATE_LIMIT_REFILL_TOKENS:100}
+    refill-seconds: ${RATE_LIMIT_REFILL_SECONDS:60}
+    auth-capacity: ${RATE_LIMIT_AUTH_CAPACITY:10}
+    auth-refill-tokens: ${RATE_LIMIT_AUTH_REFILL_TOKENS:10}
+    auth-refill-seconds: ${RATE_LIMIT_AUTH_REFILL_SECONDS:60}
+    trusted-proxy-cidrs: ${TRUSTED_PROXY_CIDRS:10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,127.0.0.1/32,::1/128}
+  auth:
+    max-failed-attempts: ${AUTH_MAX_FAILED_ATTEMPTS:5}
+    lock-duration-minutes: ${AUTH_LOCK_DURATION_MINUTES:15}
+  security:
+    https-enforcement:
+      enabled: true
+
+springdoc:
+  swagger-ui:
+    enabled: false
+  api-docs:
+    enabled: false
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics,prometheus"
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: when-authorized

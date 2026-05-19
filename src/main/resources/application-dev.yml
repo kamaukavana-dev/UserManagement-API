@@ -1,0 +1,72 @@
+server:
+  port: ${SERVER_PORT:8081}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,metrics,prometheus,shutdown"
+  endpoint:
+    shutdown:
+      enabled: true
+
+app:
+  cors:
+    allowed-origins:
+      - "http://localhost:3000"
+      - "http://localhost:4200"
+      - "http://localhost:5173"
+      - "http://localhost:5500"
+      - "http://127.0.0.1:5500"
+  jwt:
+    secret: ${JWT_SECRET}
+    key-id: ${JWT_KID:current}
+    previous-secret: ${JWT_PREVIOUS_SECRET:}
+    previous-key-id: ${JWT_PREVIOUS_KID:previous}
+    expiration-ms: 86400000
+    refresh-expiration-ms: 604800000
+  rate-limit:
+    backend: ${RATE_LIMIT_BACKEND:local}
+    auth-capacity: 5
+    auth-refill-tokens: 5
+    auth-refill-seconds: 60
+    trusted-proxy-cidrs: ${TRUSTED_PROXY_CIDRS:127.0.0.1/32,::1/128}
+  auth:
+    max-failed-attempts: 5
+    lock-duration-minutes: 15
+  security:
+    https-enforcement:
+      enabled: false
+
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.data.redis.autoconfigure.DataRedisAutoConfiguration
+      - org.springframework.boot.data.redis.autoconfigure.DataRedisReactiveAutoConfiguration
+      - org.springframework.boot.data.redis.autoconfigure.DataRedisRepositoriesAutoConfiguration
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:userdb}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        jdbc.time_zone: UTC
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 1
+    locations: classpath:db/migration,classpath:db/dev-migration
+
+  docker:
+    compose:
+      enabled: ${SPRING_DOCKER_COMPOSE_ENABLED:false}

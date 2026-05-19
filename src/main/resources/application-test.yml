@@ -1,0 +1,58 @@
+spring:
+  datasource:
+    # Testcontainers overrides this URL dynamically at runtime
+    # The actual connection is injected by @DynamicPropertySource
+    url: jdbc:postgresql://localhost:5432/userdb
+    username: postgres
+    password: ${DB_PASSWORD:}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc.time_zone: UTC
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+  docker:
+    compose:
+      enabled: false
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:test-secret-minimum-32-characters-1234567890}
+    key-id: ${JWT_KID:test-current}
+    previous-secret: ${JWT_PREVIOUS_SECRET:}
+    previous-key-id: ${JWT_PREVIOUS_KID:test-previous}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+    refresh-expiration-ms: ${JWT_REFRESH_MS:604800000}
+
+  rate-limit:
+    backend: local
+    capacity: 100       # High limit in tests — we don't want rate limiting interference
+    refill-tokens: 100
+    refill-seconds: 60
+    auth-capacity: 100
+    auth-refill-tokens: 100
+    auth-refill-seconds: 60
+    trusted-proxy-cidrs: 127.0.0.1/32,::1/128
+
+  auth:
+    max-failed-attempts: 3
+    lock-duration-minutes: 15
+
+  security:
+    https-enforcement:
+      enabled: false
+
+logging:
+  level:
+    com.company.usermanagement: DEBUG
+    org.flywaydb: DEBUG

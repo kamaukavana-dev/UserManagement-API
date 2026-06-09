@@ -1,0 +1,44 @@
+spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.data.redis.autoconfigure.DataRedisAutoConfiguration
+      - org.springframework.boot.data.redis.autoconfigure.DataRedisReactiveAutoConfiguration
+      - org.springframework.boot.data.redis.autoconfigure.DataRedisRepositoriesAutoConfiguration
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc.time_zone: UTC
+  flyway:
+    enabled: true
+    baseline-on-migrate: false
+    validate-on-migrate: true
+    out-of-order: false
+    locations: classpath:db/migration
+  sql:
+    init:
+      mode: never
+
+app:
+  jwt:
+    secret: MDEyMzQ1Njc4OUFCQ0RFRjAxMjM0NTY3ODlBQkNERUY=
+  rate-limit:
+    backend: local
+    capacity: 100
+    refill-tokens: 100
+    refill-seconds: 60
+    auth-capacity: 10
+    auth-refill-tokens: 10
+    auth-refill-seconds: 60
+    trusted-proxy-cidrs: 127.0.0.1/32,::1/128
+  auth:
+    max-failed-attempts: 5
+    lock-duration-minutes: 15
+
+# Reduce noise in tests
+logging:
+  level:
+    root: WARN
+    com.company.usermanagement: INFO

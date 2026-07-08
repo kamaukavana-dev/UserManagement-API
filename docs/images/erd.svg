@@ -1,0 +1,105 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1180' height='760' viewBox='0 0 1180 760' role='img' aria-label='Entity relationship diagram'>
+<rect width='1180' height='760' fill='#ffffff'/>
+<defs><marker id='arrow' markerWidth='9' markerHeight='9' refX='8' refY='3' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L8,3 L0,6 z' fill='#334155'/></marker><marker id='arrowback' markerWidth='9' markerHeight='9' refX='8' refY='3' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L8,3 L0,6 z' fill='#0d9488'/></marker></defs>
+<text x='24' y='34' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='20' font-weight='bold' fill='#0f172a' text-anchor='start'>Entity-Relationship Diagram</text>
+<text x='24' y='56' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='12' font-weight='normal' fill='#475569' text-anchor='start'>From db/migration V1..V9 and User / RefreshToken / AuditLog entities</text>
+<rect x='60' y='90' width='360' height='370' rx='8' fill='#ffffff' stroke='#6366f1' stroke-width='2'/>
+<rect x='60' y='90' width='360' height='34' rx='8' fill='#6366f1'/>
+<rect x='60' y='108' width='360' height='16' fill='#6366f1'/>
+<text x='240.0' y='112' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='13.5' font-weight='bold' fill='#ffffff' text-anchor='middle'>users</text>
+<text x='72' y='140' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='bold' fill='#0f172a' text-anchor='start'>id</text>
+<text x='232' y='140' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>BIGSERIAL</text>
+<text x='408' y='140' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='10.5' font-weight='bold' fill='#b45309' text-anchor='end'>PK</text>
+<rect x='62' y='148' width='356' height='24' fill='#f8fafc'/>
+<text x='72' y='164' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>tenant_id</text>
+<text x='232' y='164' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>VARCHAR(50)</text>
+<text x='408' y='164' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='10.5' font-weight='bold' fill='#334155' text-anchor='end'>UQ*</text>
+<text x='72' y='188' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>first_name</text>
+<text x='232' y='188' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>VARCHAR(50)</text>
+<rect x='62' y='196' width='356' height='24' fill='#f8fafc'/>
+<text x='72' y='212' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>last_name</text>
+<text x='232' y='212' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>VARCHAR(50)</text>
+<text x='72' y='236' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>email</text>
+<text x='232' y='236' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>CITEXT</text>
+<text x='408' y='236' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='10.5' font-weight='bold' fill='#7c3aed' text-anchor='end'>UQ</text>
+<rect x='62' y='244' width='356' height='24' fill='#f8fafc'/>
+<text x='72' y='260' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>password</text>
+<text x='232' y='260' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>VARCHAR(255)</text>
+<text x='72' y='284' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>token_version</text>
+<text x='232' y='284' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>INTEGER</text>
+<rect x='62' y='292' width='356' height='24' fill='#f8fafc'/>
+<text x='72' y='308' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>failed_login_attempts</text>
+<text x='232' y='308' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>INTEGER</text>
+<text x='72' y='332' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>locked_until</text>
+<text x='232' y='332' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>TIMESTAMPTZ</text>
+<rect x='62' y='340' width='356' height='24' fill='#f8fafc'/>
+<text x='72' y='356' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>role</text>
+<text x='232' y='356' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>VARCHAR(50)</text>
+<text x='72' y='380' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>enabled</text>
+<text x='232' y='380' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>BOOLEAN</text>
+<rect x='62' y='388' width='356' height='24' fill='#f8fafc'/>
+<text x='72' y='404' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>account_non_locked</text>
+<text x='232' y='404' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>BOOLEAN</text>
+<text x='72' y='428' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>row_version</text>
+<text x='232' y='428' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>BIGINT</text>
+<rect x='62' y='436' width='356' height='24' fill='#f8fafc'/>
+<text x='72' y='452' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>created_at / updated_at</text>
+<text x='232' y='452' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>TIMESTAMPTZ</text>
+<rect x='760' y='90' width='360' height='202' rx='8' fill='#ffffff' stroke='#0d9488' stroke-width='2'/>
+<rect x='760' y='90' width='360' height='34' rx='8' fill='#0d9488'/>
+<rect x='760' y='108' width='360' height='16' fill='#0d9488'/>
+<text x='940.0' y='112' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='13.5' font-weight='bold' fill='#ffffff' text-anchor='middle'>refresh_tokens</text>
+<text x='772' y='140' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='bold' fill='#0f172a' text-anchor='start'>id</text>
+<text x='932' y='140' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>BIGSERIAL</text>
+<text x='1108' y='140' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='10.5' font-weight='bold' fill='#b45309' text-anchor='end'>PK</text>
+<rect x='762' y='148' width='356' height='24' fill='#f8fafc'/>
+<text x='772' y='164' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>tenant_id</text>
+<text x='932' y='164' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>VARCHAR(50)</text>
+<text x='772' y='188' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>user_id</text>
+<text x='932' y='188' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>BIGINT</text>
+<text x='1108' y='188' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='10.5' font-weight='bold' fill='#0d9488' text-anchor='end'>FK</text>
+<rect x='762' y='196' width='356' height='24' fill='#f8fafc'/>
+<text x='772' y='212' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>token_hash</text>
+<text x='932' y='212' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>VARCHAR(64)</text>
+<text x='1108' y='212' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='10.5' font-weight='bold' fill='#7c3aed' text-anchor='end'>UQ</text>
+<text x='772' y='236' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>expires_at</text>
+<text x='932' y='236' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>TIMESTAMPTZ</text>
+<rect x='762' y='244' width='356' height='24' fill='#f8fafc'/>
+<text x='772' y='260' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>revoked_at</text>
+<text x='932' y='260' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>TIMESTAMPTZ</text>
+<text x='772' y='284' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>created_at / updated_at</text>
+<text x='932' y='284' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>TIMESTAMPTZ</text>
+<rect x='760' y='430' width='360' height='250' rx='8' fill='#ffffff' stroke='#b45309' stroke-width='2'/>
+<rect x='760' y='430' width='360' height='34' rx='8' fill='#b45309'/>
+<rect x='760' y='448' width='360' height='16' fill='#b45309'/>
+<text x='940.0' y='452' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='13.5' font-weight='bold' fill='#ffffff' text-anchor='middle'>audit_log</text>
+<text x='772' y='480' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='bold' fill='#0f172a' text-anchor='start'>id</text>
+<text x='932' y='480' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>BIGSERIAL</text>
+<text x='1108' y='480' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='10.5' font-weight='bold' fill='#b45309' text-anchor='end'>PK</text>
+<rect x='762' y='488' width='356' height='24' fill='#f8fafc'/>
+<text x='772' y='504' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>tenant_id</text>
+<text x='932' y='504' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>VARCHAR(50)</text>
+<text x='772' y='528' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>user_id</text>
+<text x='932' y='528' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>BIGINT</text>
+<rect x='762' y='536' width='356' height='24' fill='#f8fafc'/>
+<text x='772' y='552' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>action</text>
+<text x='932' y='552' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>VARCHAR</text>
+<text x='772' y='576' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>entity_type</text>
+<text x='932' y='576' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>VARCHAR</text>
+<rect x='762' y='584' width='356' height='24' fill='#f8fafc'/>
+<text x='772' y='600' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>entity_id</text>
+<text x='932' y='600' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>BIGINT</text>
+<text x='772' y='624' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>ip_address</text>
+<text x='932' y='624' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>VARCHAR</text>
+<rect x='762' y='632' width='356' height='24' fill='#f8fafc'/>
+<text x='772' y='648' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>user_agent</text>
+<text x='932' y='648' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>VARCHAR</text>
+<text x='772' y='672' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#0f172a' text-anchor='start'>created_at</text>
+<text x='932' y='672' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11' font-weight='normal' fill='#64748b' text-anchor='start'>TIMESTAMPTZ</text>
+<line x1='420' y1='190' x2='760' y2='190' stroke='#0d9488' stroke-width='2' marker-end='url(#arrow)'/>
+<text x='590' y='182' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='11' font-weight='normal' fill='#0d9488' text-anchor='middle'>1 .. N  (FK user_id, ON DELETE CASCADE)</text>
+<line x1='420' y1='300' x2='760' y2='470' stroke='#b45309' stroke-width='2' stroke-dasharray='5 4' marker-end='url(#arrow)'/>
+<text x='600' y='372' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='11' font-weight='normal' fill='#b45309' text-anchor='middle'>user_id (actor; no FK constraint)</text>
+<text x='60' y='700' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='11' font-weight='normal' fill='#475569' text-anchor='start'>PK primary key   FK foreign key   UQ unique   UQ* email uniqueness: UNIQUE(lower(email)) [V3] and partial UNIQUE(tenant_id,email) WHERE enabled [V8]</text>
+<text x='60' y='720' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='11' font-weight='normal' fill='#475569' text-anchor='start'>GIN pg_trgm indexes on lower(first_name|last_name|email) back keyword search [V6].</text>
+</svg>

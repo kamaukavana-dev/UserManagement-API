@@ -245,6 +245,72 @@ class UserControllerIntegrationTest extends AbstractPostgresIntegrationTest {
                 .andExpect(jsonPath("$.status").value(404));
     }
 
+    // ─── Privilege-escalation negative paths (valid USER token, admin-only ops) ──
+
+    @Test
+    @DisplayName("PATCH /users/{id}/role — USER token cannot escalate a role (403, role unchanged)")
+    void updateUserRole_ShouldReturn403_ForUserRole_AndNotChangeRole() throws Exception {
+        mockMvc.perform(patch("/users/{id}/role", testUserId)
+                        .header("Authorization", "Bearer " + userToken)
+                        .param("role", "ROLE_ADMIN"))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403));
+
+        // Server-side authorization must hold: the role in the DB is untouched.
+        User after = userRepository.findById(testUserId).orElseThrow();
+        org.assertj.core.api.Assertions.assertThat(after.getRole()).isEqualTo(Role.ROLE_USER);
+    }
+
+    @Test
+    @DisplayName("POST /users — USER token cannot create accounts (403, no user created)")
+    void createUser_ShouldReturn403_ForUserRole() throws Exception {
+        long before = userRepository.count();
+
+        AdminCreateUserRequest request = AdminCreateUserRequest.builder()
+                .firstName("Mallory")
+                .lastName("Escalator")
+                .email("mallory.escalation@example.com")
+                .password("AttackerSecurePassword123!")
+                .role(Role.ROLE_ADMIN)
+                .build();
+
+        mockMvc.perform(post("/users")
+                        .header("Authorization", "Bearer " + userToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403));
+
+        org.assertj.core.api.Assertions.assertThat(userRepository.count()).isEqualTo(before);
+        org.assertj.core.api.Assertions.assertThat(
+                userRepository.findByEmail("mallory.escalation@example.com")).isEmpty();
+    }
+
+    @Test
+    @DisplayName("DELETE /users/{id} — USER token cannot soft-delete (403, account still enabled)")
+    void deleteUser_ShouldReturn403_ForUserRole_AndNotDisableAccount() throws Exception {
+        mockMvc.perform(delete("/users/{id}", testUserId)
+                        .header("Authorization", "Bearer " + userToken))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403));
+
+        User after = userRepository.findById(testUserId).orElseThrow();
+        org.assertj.core.api.Assertions.assertThat(after.isEnabled()).isTrue();
+    }
+
+    @Test
+    @DisplayName("PATCH /users/{id}/status — USER token cannot disable an account (403, still enabled)")
+    void setUserEnabled_ShouldReturn403_ForUserRole() throws Exception {
+        mockMvc.perform(patch("/users/{id}/status", testUserId)
+                        .header("Authorization", "Bearer " + userToken)
+                        .param("enabled", "false"))
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.status").value(403));
+
+        User after = userRepository.findById(testUserId).orElseThrow();
+        org.assertj.core.api.Assertions.assertThat(after.isEnabled()).isTrue();
+    }
+
     // ─── Helpers ─────────────────────────────────────────────────────────────
 
     private String loginAndGetToken(String email, String password) throws Exception {

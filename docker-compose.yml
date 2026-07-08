@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16 # Use PostgreSQL 16
+    container_name: usermanagement_postgres_dev
+    ports:
+      - "5432:5432" # Map host port 5432 to container port 5432
+    environment:
+      POSTGRES_DB: usermanagement_dev
+      POSTGRES_USER: usermanagement_user
+      POSTGRES_PASSWORD: usermanagement_password # Ensure this matches application-dev.yml
+      # If using a password manager, consider securely injecting this
+    volumes:
+      - postgres_data:/var/lib/postgresql/data # Persist data using a named volume
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U usermanagement_user -d usermanagement_dev"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7 # Use Redis 7
+    container_name: usermanagement_redis_dev
+    ports:
+      - "6379:6379" # Map host port 6379 to container port 6379
+    command: redis-server --appendonly yes --requirepass usermanagement_redis_password # Example: basic password, consider secure management
+    # Note: If app.redis.password is set in application-dev.yml, ensure it matches here.
+    # For simplicity and demonstration, a basic password is used.
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  postgres_data: # Define the named volume for PostgreSQL data persistence

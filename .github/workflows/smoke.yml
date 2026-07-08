@@ -1,0 +1,94 @@
+name: Smoke
+
+on:
+  workflow_run:
+    workflows: [CI]
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch' }}
+    env:
+      SPRING_PROFILES_ACTIVE: prod
+      JWT_SECRET: ci-secret-minimum-32-characters-long-1234567890
+      DB_NAME: smoke_db
+      DB_USERNAME: smoke
+      DB_PASSWORD: smoke_pwd
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DOCKER_BUILDKIT: 1
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: smoke_db
+          POSTGRES_USER: smoke
+          POSTGRES_PASSWORD: smoke_pwd
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U smoke -d smoke_db"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+
+      - name: Build jar
+        run: mvn -B -DskipTests package
+
+      - name: Build Docker image
+        run: docker build -t usermanagement-api:smoke --target production .
+
+      - name: Run app container
+        run: |
+          docker run -d --name usermanagement_app_smoke \
+            --network host \
+            -e SPRING_PROFILES_ACTIVE=prod \
+            -e DB_HOST=localhost \
+            -e DB_PORT=5432 \
+            -e DB_NAME=${DB_NAME} \
+            -e DB_USERNAME=${DB_USERNAME} \
+            -e DB_PASSWORD=${DB_PASSWORD} \
+            -e JWT_SECRET=${JWT_SECRET} \
+            -e JWT_EXPIRATION_MS=86400000 \
+            -e JWT_REFRESH_MS=604800000 \
+            -e RATE_LIMIT_CAPACITY=200 \
+            -e RATE_LIMIT_REFILL_TOKENS=200 \
+            -e RATE_LIMIT_REFILL_SECONDS=60 \
+            -e SERVER_PORT=8080 \
+            usermanagement-api:smoke
+
+          # Wait for actuator health
+          for i in {1..30}; do
+            if curl -fsS http://localhost:8080/api/v1/actuator/health > /dev/null; then
+              echo "App is up"; break; fi; sleep 2; done
+
+      - name: Install k6
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gnupg software-properties-common
+          curl -fsSL https://dl.k6.io/key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/k6-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/k6-archive-keyring.gpg] https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list
+          sudo apt-get update
+          sudo apt-get install -y k6
+
+      - name: Run k6 smoke
+        run: k6 run -e BASE_URL=http://localhost:8080/api/v1 k6/smoke.js
+
+      - name: Cleanup
+        if: always()
+        run: |
+          docker logs usermanagement_app_smoke || true
+          docker rm -f usermanagement_app_smoke || true
+          docker rmi usermanagement-api:smoke || true

@@ -1,0 +1,10 @@
+target/
+!target/*.jar
+.git/
+.env
+.env.*
+*.log
+.mvn/wrapper/maven-wrapper.jar
+**/*.md
+.github/
+src/test/

@@ -258,8 +258,17 @@ class AuthControllerIntegrationTest extends AbstractPostgresIntegrationTest {
     @DisplayName("GET /users/me — should reject tampered JWTs")
     void getMe_ShouldReturn401_ForTamperedToken() throws Exception {
         String token = registerAndGetToken(DEFAULT_EMAIL, DEFAULT_PASSWORD);
-        String tampered = token.substring(0, token.length() - 1)
-                + (token.endsWith("a") ? "b" : "a");
+
+        // Tamper the FIRST character of the signature segment. Flipping the LAST
+        // base64url char (previous approach) is unreliable: an HMAC-SHA256
+        // signature is 32 bytes -> 43 base64url chars whose final char carries
+        // non-significant padding bits, so e.g. 'a'->'b' can decode to the same
+        // bytes and leave the token validly signed (flaky 200). The first char
+        // encodes significant bits of byte 0, so this always changes the signature.
+        String[] parts = token.split("\\.");
+        char[] sig = parts[2].toCharArray();
+        sig[0] = (sig[0] == 'A') ? 'Z' : 'A';
+        String tampered = parts[0] + "." + parts[1] + "." + new String(sig);
 
         mockMvc.perform(get("/users/me")
                 .header("Authorization", "Bearer " + tampered))

@@ -1,0 +1,42 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='1180' height='740' viewBox='0 0 1180 740' role='img' aria-label='Authorization model'>
+<rect width='1180' height='740' fill='#ffffff'/>
+<defs><marker id='arrow' markerWidth='9' markerHeight='9' refX='8' refY='3' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L8,3 L0,6 z' fill='#334155'/></marker><marker id='arrowback' markerWidth='9' markerHeight='9' refX='8' refY='3' orient='auto' markerUnits='strokeWidth'><path d='M0,0 L8,3 L0,6 z' fill='#0d9488'/></marker></defs>
+<text x='24' y='34' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='20' font-weight='bold' fill='#0f172a' text-anchor='start'>Authorization Model (as implemented)</text>
+<text x='24' y='56' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='12' font-weight='normal' fill='#475569' text-anchor='start'>SecurityConfig request matchers + @PreAuthorize(UserController) + Role enum + tokenVersion</text>
+<rect x='40' y='90' width='250' height='70' rx='8' fill='#fef9c3' stroke='#ca8a04' stroke-width='1.5'/>
+<text x='165.0' y='122.5' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='13' font-weight='normal' fill='#1e293b' text-anchor='middle'>Roles (entity/enums/Role.java)</text>
+<text x='165.0' y='138.5' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='13' font-weight='normal' fill='#1e293b' text-anchor='middle'>ROLE_USER  •  ROLE_ADMIN</text>
+<text x='46' y='182' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='11' font-weight='normal' fill='#475569' text-anchor='start'>Granted authority = role.name(); role claim embedded in access JWT.</text>
+<text x='46' y='200' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='11' font-weight='normal' fill='#475569' text-anchor='start'>Every request re-loads the user; @PreAuthorize is evaluated server-side.</text>
+<rect x='40' y='230' width='340' height='34' rx='8' fill='#dcfce7' stroke='#16a34a' stroke-width='1.5'/>
+<text x='210.0' y='252.5' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='13' font-weight='bold' fill='#1e293b' text-anchor='middle'>PUBLIC  (permitAll)</text>
+<text x='52' y='280' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='12' font-weight='normal' fill='#166534' text-anchor='start'>POST /auth/register</text>
+<text x='52' y='304' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='12' font-weight='normal' fill='#166534' text-anchor='start'>POST /auth/login</text>
+<text x='52' y='328' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='12' font-weight='normal' fill='#166534' text-anchor='start'>POST /auth/refresh</text>
+<text x='52' y='352' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='12' font-weight='normal' fill='#166534' text-anchor='start'>GET  /actuator/health, /actuator/info</text>
+<text x='52' y='376' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='12' font-weight='normal' fill='#166534' text-anchor='start'>GET  /swagger-ui/**, /v3/api-docs/** (dev/test)</text>
+<rect x='430' y='230' width='340' height='34' rx='8' fill='#e0f2fe' stroke='#0284c7' stroke-width='1.5'/>
+<text x='600.0' y='252.5' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='13' font-weight='bold' fill='#1e293b' text-anchor='middle'>AUTHENTICATED  (any valid token)</text>
+<text x='442' y='280' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='12' font-weight='normal' fill='#075985' text-anchor='start'>POST /auth/logout</text>
+<text x='442' y='304' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='12' font-weight='normal' fill='#075985' text-anchor='start'>GET  /users/me</text>
+<text x='442' y='328' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='12' font-weight='normal' fill='#075985' text-anchor='start'>PUT  /users/me            (self; no role field)</text>
+<text x='442' y='352' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='12' font-weight='normal' fill='#075985' text-anchor='start'>PUT  /users/me/password   (needs current pw)</text>
+<text x='442' y='382' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='11' font-weight='normal' fill='#475569' text-anchor='start'>Principal from @AuthenticationPrincipal —</text>
+<text x='442' y='398' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='11' font-weight='normal' fill='#475569' text-anchor='start'>no user-supplied id, so no cross-user IDOR.</text>
+<rect x='810' y='230' width='340' height='34' rx='8' fill='#fee2e2' stroke='#dc2626' stroke-width='1.5'/>
+<text x='980.0' y='252.5' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='13' font-weight='bold' fill='#1e293b' text-anchor='middle'>ADMIN  @PreAuthorize hasRole(&#x27;ADMIN&#x27;)</text>
+<text x='822' y='280' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#991b1b' text-anchor='start'>GET    /users            (paginated)</text>
+<text x='822' y='302' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#991b1b' text-anchor='start'>GET    /users/search</text>
+<text x='822' y='324' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#991b1b' text-anchor='start'>GET    /users/{id}</text>
+<text x='822' y='346' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#991b1b' text-anchor='start'>GET    /users/role/{role}</text>
+<text x='822' y='368' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#991b1b' text-anchor='start'>POST   /users</text>
+<text x='822' y='390' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#991b1b' text-anchor='start'>PUT    /users/{id}</text>
+<text x='822' y='412' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#991b1b' text-anchor='start'>PATCH  /users/{id}/role</text>
+<text x='822' y='434' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#991b1b' text-anchor='start'>PATCH  /users/{id}/status</text>
+<text x='822' y='456' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#991b1b' text-anchor='start'>DELETE /users/{id}   (soft-delete)</text>
+<text x='822' y='478' font-family='DejaVu Sans Mono, Consolas, monospace' font-size='11.5' font-weight='normal' fill='#991b1b' text-anchor='start'>GET    /actuator/metrics/**, /prometheus</text>
+<rect x='40' y='600' width='1110' height='96' rx='8' fill='#f1f5f9' stroke='#64748b' stroke-width='1.5'/>
+<text x='595.0' y='637.75' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='12.5' font-weight='normal' fill='#1e293b' text-anchor='middle'>Token-version revocation (invalidates already-issued access tokens):</text>
+<text x='595.0' y='653.25' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='12.5' font-weight='normal' fill='#1e293b' text-anchor='middle'>password change • role change • account enable/disable • soft-delete • logout</text>
+<text x='595.0' y='668.75' font-family='DejaVu Sans, Segoe UI, Helvetica, Arial, sans-serif' font-size='12.5' font-weight='normal' fill='#1e293b' text-anchor='middle'>all call user.tokenVersion++ and revoke stored refresh tokens; JwtService rejects tokens whose tokenVersion != current.</text>
+</svg>

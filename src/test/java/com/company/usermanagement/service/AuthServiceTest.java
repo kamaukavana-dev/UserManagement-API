@@ -257,7 +257,11 @@ class AuthServiceTest {
             assertThatThrownBy(() -> authService.login(loginRequest))
                     .isInstanceOf(BadCredentialsException.class);
 
-            verify(passwordEncoder, never()).matches(anyString(), anyString());
+            // Constant-time defence: a password verification still runs before the
+            // enabled/locked check so a disabled account is indistinguishable by
+            // timing from an active one. It must NOT touch the failed-attempt
+            // counter (that path is reserved for wrong-password on active accounts).
+            verify(passwordEncoder).matches(eq("SecurePassword123"), anyString());
             verify(userRepository, never()).save(any());
         }
 
@@ -276,8 +280,27 @@ class AuthServiceTest {
         @DisplayName("should throw when user not found by email")
         void login_ShouldThrow_WhenUserNotFound() {
             when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
+            when(passwordEncoder.encode(anyString())).thenReturn("$argon2id$dummy$hash");
+
             assertThatThrownBy(() -> authService.login(loginRequest))
                     .isInstanceOf(BadCredentialsException.class);
+        }
+
+        @Test
+        @DisplayName("should run a hash verification for unknown emails to prevent timing enumeration")
+        void login_ShouldPerformConstantTimeHash_WhenUserNotFound() {
+            when(userRepository.findByEmail("john@example.com"))
+                    .thenReturn(Optional.empty());
+            when(passwordEncoder.encode(anyString())).thenReturn("$argon2id$dummy$hash");
+
+            assertThatThrownBy(() -> authService.login(loginRequest))
+                    .isInstanceOf(BadCredentialsException.class);
+
+            // Pre-fix, login() threw immediately on Optional.empty() WITHOUT calling
+            // the (deliberately slow) encoder — leaking account existence via latency.
+            // The fix verifies the supplied password against a dummy hash instead.
+            verify(passwordEncoder).matches(eq("SecurePassword123"), eq("$argon2id$dummy$hash"));
+            verify(refreshTokenService, never()).issueTokens(any());
         }
     }
 

@@ -66,15 +66,28 @@ public class AuthService {
         String normalizedEmail = normalizeEmail(request.getEmail());
         log.info("Login attempt for email: {}", normalizedEmail);
 
-        User user = userRepository.findByEmail(normalizedEmail)
-                .orElseThrow(BadCredentialsException::new);
+        User user = userRepository.findByEmail(normalizedEmail).orElse(null);
+
+        // Always perform exactly one password verification so the response
+        // time does not depend on whether the account exists. Skipping the
+        // (deliberately slow) Argon2 hash for unknown emails leaks account
+        // existence through a timing side-channel — an attacker can enumerate
+        // valid accounts by measuring latency. Unknown accounts are verified
+        // against a fixed dummy hash instead.
+        String encodedPassword = user != null ? user.getPassword() : dummyHash();
+        boolean passwordMatches = passwordEncoder.matches(request.getPassword(), encodedPassword);
+
+        if (user == null) {
+            log.warn("Login failed for unknown email: {}", normalizedEmail);
+            throw new BadCredentialsException();
+        }
 
         if (!user.isEnabled() || !user.isAccountNonLocked()) {
             log.warn("Login rejected for locked/disabled account: {}", normalizedEmail);
             throw new BadCredentialsException();
         }
 
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+        if (!passwordMatches) {
             user.registerFailedLoginAttempt(
                     appProperties.getAuth().getMaxFailedAttempts(),
                     appProperties.getAuth().getLockDurationMinutes());
@@ -117,6 +130,29 @@ public class AuthService {
                 .refreshExpiresIn(bundle.refreshTokenExpiresIn())
                 .user(userMapper.toResponse(bundle.user()))
                 .build();
+    }
+
+    /**
+     * A valid, constant encoded password used to run a real (slow) hash
+     * verification for login attempts against non-existent accounts, so the
+     * response time matches that of an existing account. Computed lazily once
+     * with the configured encoder so it always uses the current algorithm and
+     * work factor.
+     */
+    private volatile String dummyHash;
+
+    private String dummyHash() {
+        String hash = dummyHash;
+        if (hash == null) {
+            synchronized (this) {
+                hash = dummyHash;
+                if (hash == null) {
+                    hash = passwordEncoder.encode("timing-safe-dummy-password-value");
+                    dummyHash = hash;
+                }
+            }
+        }
+        return hash;
     }
 
     private String normalizeEmail(String email) {

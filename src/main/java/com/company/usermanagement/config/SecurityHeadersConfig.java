@@ -40,7 +40,8 @@ public class SecurityHeadersConfig extends OncePerRequestFilter {
             response.setHeader("Expires", "0");
         }
 
-        // Swagger UI requires a slightly relaxed CSP in non-production.
+        // Swagger UI requires a slightly relaxed CSP (inline scripts/styles).
+        // Applied by path, so it holds in every profile now that docs are on in prod.
         if (request.getServletPath().startsWith("/swagger-ui")
                 || request.getServletPath().startsWith("/api-docs")
                 || request.getServletPath().startsWith("/v3/api-docs")) {

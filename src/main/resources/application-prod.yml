@@ -75,11 +75,13 @@ app:
     https-enforcement:
       enabled: true
 
+# API docs are intentionally exposed in prod: this is a portfolio demo with no
+# real user data, and read-only OpenAPI docs support the "verify in 3 clicks" story.
 springdoc:
   swagger-ui:
-    enabled: false
+    enabled: true
   api-docs:
-    enabled: false
+    enabled: true
 
 management:
   endpoints:

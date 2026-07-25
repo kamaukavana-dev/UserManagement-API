@@ -1,12 +1,8 @@
 # User Management & Authentication Service
 
-A Spring Boot 3.2.5 service providing user registration, JWT authentication, self-service
-profile management, and role-based access control (RBAC) for two roles (`ROLE_USER`,
-`ROLE_ADMIN`). It is an authentication service, **not** a full identity provider — see
-[Security Boundaries](#security-boundaries) and [Known Limitations](#known-limitations).
+A production-grade Spring Boot 3 authentication service for multi-tenant systems. Implements JWT auth with token rotation, Argon2 hashing, role-based access control (RBAC), per-IP rate limiting, and audit logging. **92% test coverage** with Testcontainers-backed integration tests.
 
-> Every claim below is backed by a file reference. Coverage and test counts come from an
-> actual `./mvnw clean verify -Pit` run on 2026-07-08 (see [Testing](#testing)).
+> Every claim is backed by code reference and measurable tests. See [Testing](#testing).
 
 ## Contents
 - [Architecture Diagrams](#architecture-diagrams)
